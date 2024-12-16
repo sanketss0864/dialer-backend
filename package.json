@@ -1,6 +1,7 @@
 {
   "name": "express-twilio-voip",
   "private": true,
+  "type": "module",
   "scripts": {
     "start": "node index.js",
     "test": "jest"
