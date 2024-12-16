@@ -4,7 +4,14 @@ const getCallLogs = async (req, res, next) => {
   try {
     const { limit, startDate, endDate } = req.query;
     const calls = await logsService.getCallLogs({ limit, startDate, endDate });
-    res.json(calls);
+    res.json({
+      calls,
+      meta: {
+        page: 1,
+        pageSize: parseInt(limit) || 50,
+        totalCount: calls.length
+      }
+    });
   } catch (error) {
     next(error);
   }
@@ -24,7 +31,14 @@ const getTranscriptions = async (req, res, next) => {
   try {
     const { limit } = req.query;
     const transcriptions = await logsService.getTranscriptions({ limit });
-    res.json(transcriptions);
+    res.json({
+      transcriptions,
+      meta: {
+        page: 1,
+        pageSize: parseInt(limit) || 50,
+        totalCount: transcriptions.length
+      }
+    });
   } catch (error) {
     next(error);
   }

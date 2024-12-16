@@ -11,7 +11,17 @@ const getCallLogs = async (params = {}) => {
 };
 
 const getCallDetails = async (callSid) => {
-  return client.calls(callSid).fetch();
+  const call = await client.calls(callSid).fetch();
+  const recordings = await client.recordings.list({ callSid });
+  
+  return {
+    ...call,
+    recordings: recordings.map(recording => ({
+      sid: recording.sid,
+      duration: recording.duration,
+      url: recording.url
+    }))
+  };
 };
 
 const getTranscriptions = async (params = {}) => {

@@ -11,9 +11,10 @@
     <p>Available endpoints:</p>
     <ul>
       <li><code>POST /token/generate</code> - Generate access token</li>
-      <li><code>POST /voice/incoming</code> - Handle incoming calls</li>
-      <li><code>POST /voice/outbound</code> - Make outbound calls</li>
+      <li><code>POST /voice/call</code> - Handle both incoming and outbound calls</li>
       <li><code>GET /voice/recordings</code> - List recordings</li>
+      <li><code>POST /voice/recording-status</code> - Recording status webhook</li>
+      <li><code>POST /voice/transcription</code> - Transcription webhook</li>
       <li><code>GET /logs/calls</code> - Get call logs</li>
       <li><code>GET /logs/calls/:callSid</code> - Get specific call details</li>
       <li><code>GET /logs/transcriptions</code> - Get all transcriptions</li>

@@ -1,15 +1,16 @@
 const twilio = require('twilio');
 const VoiceResponse = twilio.twiml.VoiceResponse;
 
-const generateIncomingCallTwiml = () => {
+const generateIncomingCallTwiml = (recordingOptions) => {
   const twiml = new VoiceResponse();
   twiml.say('Incoming call received. Recording will start now.');
+  
   twiml.record({
-    action: '/voice/recording-status',
-    transcribe: true,
-    transcribeCallback: '/voice/transcription',
-    maxLength: 3600
+    ...recordingOptions,
+    maxLength: 3600,
+    timeout: 10
   });
+  
   return twiml;
 };
 

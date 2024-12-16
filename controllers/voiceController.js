@@ -1,45 +1,67 @@
 const callService = require('../services/callService');
+const recordingService = require('../services/recordingService');
 const twimlGenerator = require('../utils/twimlGenerator');
+const recordingHelper = require('../utils/recordingHelper');
 
-const handleIncomingCall = (req, res) => {
-  const twiml = twimlGenerator.generateIncomingCallTwiml();
-  res.type('text/xml');
-  res.send(twiml.toString());
-};
-
-const handleOutboundCall = async (req, res) => {
-  const { to, from } = req.body;
-  const baseUrl = `${req.protocol}://${req.get('host')}`;
-  
+const handleIncomingCall = (req, res, next) => {
   try {
-    const call = await callService.makeOutboundCall(to, from, baseUrl);
-    res.json({ success: true, callSid: call.sid });
+    const recordingOptions = recordingHelper.getRecordingOptions(req);
+    const twiml = twimlGenerator.generateIncomingCallTwiml(recordingOptions);
+    res.type('text/xml');
+    res.send(twiml.toString());
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    next(error);
   }
 };
 
-const handleRecordingStatus = (req, res) => {
-  const { RecordingUrl, RecordingSid, CallSid } = req.body;
-  console.log(`Recording completed: ${RecordingUrl}`);
+const handleOutboundCall = async (req, res, next) => {
+  const { to, from } = req.body;
+  const recordingOptions = recordingHelper.getRecordingOptions(req);
   
-  const twiml = twimlGenerator.generateRecordingCompleteTwiml();
-  res.type('text/xml');
-  res.send(twiml.toString());
+  try {
+    const call = await callService.makeOutboundCall(to, from, recordingOptions);
+    res.json({ success: true, callSid: call.sid });
+  } catch (error) {
+    next(error);
+  }
 };
 
-const handleTranscription = (req, res) => {
+const handleRecordingStatus = async (req, res, next) => {
+  const { RecordingUrl, RecordingSid, CallSid, RecordingStatus } = req.body;
+  
+  try {
+    if (RecordingStatus === 'completed') {
+      await recordingService.saveRecording(RecordingSid, CallSid);
+      const twiml = twimlGenerator.generateRecordingCompleteTwiml();
+      res.type('text/xml');
+      res.send(twiml.toString());
+    } else {
+      res.sendStatus(200);
+    }
+  } catch (error) {
+    next(error);
+  }
+};
+
+const handleTranscription = async (req, res, next) => {
   const { TranscriptionText, TranscriptionStatus, RecordingSid } = req.body;
-  console.log(`Transcription completed: ${TranscriptionText}`);
-  res.sendStatus(200);
+  
+  try {
+    if (TranscriptionStatus === 'completed') {
+      console.log(`Transcription completed for recording ${RecordingSid}: ${TranscriptionText}`);
+    }
+    res.sendStatus(200);
+  } catch (error) {
+    next(error);
+  }
 };
 
-const getRecordings = async (req, res) => {
+const getRecordings = async (req, res, next) => {
   try {
     const recordings = await callService.getRecordings();
     res.json(recordings);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    next(error);
   }
 };
 

@@ -2,16 +2,15 @@
   "name": "express-twilio-voip",
   "private": true,
   "scripts": {
-    "start": "nodemon index.js",
+    "start": "node index.js",
     "test": "jest"
   },
   "dependencies": {
-    "body-parser": "^1.20.2",
-    "cors": "^2.8.5",
-    "dotenv": "^16.3.1",
     "express": "^4.18.2",
-    "nodemon": "^3.1.9",
-    "twilio": "^4.19.0"
+    "twilio": "^4.19.0",
+    "dotenv": "^16.3.1",
+    "body-parser": "^1.20.2",
+    "cors": "^2.8.5"
   },
   "devDependencies": {
     "jest": "^29.7.0",

@@ -8,8 +8,15 @@ const {
   getRecordings
 } = require('../controllers/voiceController');
 
-router.post('/incoming', handleIncomingCall);
-router.post('/outbound', handleOutboundCall);
+router.post('/call', (req, res, next) => {
+  const { direction } = req.body;
+  
+  if (direction === 'outbound') {
+    return handleOutboundCall(req, res, next);
+  }
+  return handleIncomingCall(req, res, next);
+});
+
 router.post('/recording-status', handleRecordingStatus);
 router.post('/transcription', handleTranscription);
 router.get('/recordings', getRecordings);
