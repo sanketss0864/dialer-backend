@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Twilio VoIP Server</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <h1>Twilio VoIP Server</h1>
+    <p>Available endpoints:</p>
+    <ul>
+      <li><code>POST /token/generate</code> - Generate access token</li>
+      <li><code>POST /voice/incoming</code> - Handle incoming calls</li>
+      <li><code>POST /voice/outbound</code> - Make outbound calls</li>
+      <li><code>GET /voice/recordings</code> - List recordings</li>
+      <li><code>GET /logs/calls</code> - Get call logs</li>
+      <li><code>GET /logs/calls/:callSid</code> - Get specific call details</li>
+      <li><code>GET /logs/transcriptions</code> - Get all transcriptions</li>
+      <li><code>GET /logs/transcriptions/:transcriptionSid</code> - Get specific transcription</li>
+    </ul>
+  </body>
+</html>
