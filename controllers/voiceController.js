@@ -112,5 +112,6 @@ module.exports = {
   handleOutboundCall,
   handleRecordingStatus,
   handleTranscription,
-  getRecordings
+  getRecordings,
+  voiceResponse
 };
