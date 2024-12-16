@@ -2,6 +2,8 @@ const callService = require('../services/callService');
 const recordingService = require('../services/recordingService');
 const twimlGenerator = require('../utils/twimlGenerator');
 const recordingHelper = require('../utils/recordingHelper');
+import VoiceResponse from 'twilio/lib/twiml/VoiceResponse';
+
 
 const handleIncomingCall = (req, res, next) => {
   try {
@@ -25,6 +27,46 @@ const handleOutboundCall = async (req, res, next) => {
     next(error);
   }
 };
+
+
+const voiceResponse =async (req, res, next)=>{
+  requestBody=req
+  const toNumberOrClientName = requestBody.To;
+  const callerId = +18304838189;
+  let twiml = new VoiceResponse();
+
+  // If the request to the /voice endpoint is TO your Twilio Number, 
+  // then it is an incoming call towards your Twilio.Device.
+  if (toNumberOrClientName == callerId) {
+    let dial = twiml.dial();
+
+    // This will connect the caller with your Twilio.Device/client 
+    dial.client(identity);
+
+  } else if (requestBody.To) {
+    // This is an outgoing call
+
+    // set the callerId
+    let dial = twiml.dial({ callerId });
+
+    // Check if the 'To' parameter is a Phone Number or Client Name
+    // in order to use the appropriate TwiML noun 
+    const attr = isAValidPhoneNumber(toNumberOrClientName)
+      ? "number"
+      : "client";
+    dial[attr]({}, toNumberOrClientName);
+  } else {
+    twiml.say("Thanks for calling!");
+  }
+
+  return twiml.toString();
+};
+
+
+function isAValidPhoneNumber(number) {
+  return /^[\d\+\-\(\) ]+$/.test(number);
+}
+
 
 const handleRecordingStatus = async (req, res, next) => {
   const { RecordingUrl, RecordingSid, CallSid, RecordingStatus } = req.body;

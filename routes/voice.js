@@ -11,10 +11,11 @@ const {
 router.post('/call', (req, res, next) => {
   const { direction } = req.body;
   
-  if (direction === 'outbound') {
-    return handleOutboundCall(req, res, next);
-  }
-  return handleIncomingCall(req, res, next);
+  // if (direction === 'outbound') {
+  //   return handleOutboundCall(req, res, next);
+  // }
+  // return handleIncomingCall(req, res, next);
+  return voiceResponse(req,res,next);
 });
 
 router.post('/recording-status', handleRecordingStatus);
