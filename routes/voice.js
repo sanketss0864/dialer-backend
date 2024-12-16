@@ -3,6 +3,7 @@ const router = express.Router();
 const {
   handleIncomingCall,
   handleOutboundCall,
+  voiceResponse,
   handleRecordingStatus,
   handleTranscription,
   getRecordings
